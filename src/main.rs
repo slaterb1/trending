@@ -3,6 +3,7 @@ use serde::Deserialize;
 use serde_json;
 use dialoguer::{Confirmation, FuzzySelect, Select, theme::ColorfulTheme};
 use std::collections::HashMap;
+use console::Emoji;
 
 #[derive(Deserialize, Debug, Clone)]
 struct Language {
@@ -36,7 +37,12 @@ struct BuiltBy {
     href: String,
 }
 
+// Global Constants
 const TIME_RANGES: [&str; 3] = ["daily", "weekly", "monthly"];
+
+// Emojis
+static STAR: Emoji<'_, '_> = Emoji("⭐ ", "");
+static FORK: Emoji<'_, '_> = Emoji("🍴 ", "");
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
@@ -92,7 +98,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let trends: Vec<Project> = serde_json::from_str(&trends_body)?;
 
-    println!("trends: {:?}", trends);
+    // format trends data into digestable selections
+    let trend_selections: Vec<String> = trends.iter()
+        .cloned()
+        .map(|proj| {
+            format!(
+                "{}\n{}\n{} {} {} {}\n {}",
+                proj.name,
+                proj.author,
+                STAR, proj.stars, FORK, proj.forks,
+                proj.description
+            )
+        })
+        .collect();
+
+    let selected_project = Select::with_theme(&ColorfulTheme::default())
+        .default(0)
+        .paged(true)
+        .items(&trend_selections)
+        .interact()?;
 
     Ok(())
 }
