@@ -118,5 +118,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .items(&trend_selections)
         .interact()?;
 
+    println!("{:?}", trends[selected_project]);
+
     Ok(())
 }
