@@ -41,8 +41,8 @@ struct BuiltBy {
 const TIME_RANGES: [&str; 3] = ["daily", "weekly", "monthly"];
 
 // Emojis
-static STAR: Emoji<'_, '_> = Emoji("⭐ ", "");
-static FORK: Emoji<'_, '_> = Emoji("🍴 ", "");
+static STAR: Emoji<'_, '_> = Emoji("⭐ ", "s: ");
+static FORK: Emoji<'_, '_> = Emoji("🍴 ", "f: ");
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
@@ -103,7 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .cloned()
         .map(|proj| {
             format!(
-                "{}\n{}\n{} {} {} {}\n {}",
+                "{}\n  {}\n  {} {} {} {}\n  {}",
                 proj.name,
                 proj.author,
                 STAR, proj.stars, FORK, proj.forks,
@@ -113,8 +113,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .collect();
 
     let selected_project = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Select a project to work on")
         .default(0)
         .paged(true)
+        .lines_per_item(4)
         .items(&trend_selections)
         .interact()?;
 
