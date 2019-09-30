@@ -11,6 +11,31 @@ struct Language {
     name: String,
 }
 
+#[derive(Deserialize, Debug, Clone)]
+struct Project {
+    author: String,
+    name: String,
+    avatar: String,
+    url: String,
+    description: String,
+    language: String,
+    #[serde(rename(deserialize = "languageColor"))]
+    language_color: String,
+    stars: i32,
+    forks: i32,
+    #[serde(rename(deserialize = "currentPeriodStars"))]
+    current_period_stars: i32,
+    #[serde(rename(deserialize = "builtBy"))]
+    built_by: Vec<BuiltBy>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+struct BuiltBy {
+    username: String,
+    avatar: String,
+    href: String,
+}
+
 const TIME_RANGES: [&str; 3] = ["daily", "weekly", "monthly"];
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -58,6 +83,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     println!("url: {}", trend_url);
+
+    // Call trend api using constructed url
+    let trends_body = client
+        .get(&trend_url)
+        .send()?
+        .text()?;
+
+    let trends: Vec<Project> = serde_json::from_str(&trends_body)?;
+
+    println!("trends: {:?}", trends);
 
     Ok(())
 }
