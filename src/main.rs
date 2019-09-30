@@ -11,6 +11,8 @@ struct Language {
     name: String,
 }
 
+const TIME_RANGES: [&str; 3] = ["daily", "weekly", "monthly"];
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
     let body = client
@@ -37,13 +39,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let picked_language = match language_confirmation {
         true => FuzzySelect::with_theme(&ColorfulTheme::default())
+            .default(0)
             .paged(true)
             .items(&language_items[..])
             .interact()?,
         false => "All".to_owned(),
     };
 
-    println!("Selected language: {}", picked_language);
+    let time_range = Select::with_theme(&ColorfulTheme::default())
+        .default(0)
+        .items(&TIME_RANGES)
+        .interact()?;
+
+    let trend_url = if &picked_language == "All" {
+        format!("https://github-trending-api.now.sh/repositories?since={}", TIME_RANGES[time_range])
+    } else {
+        format!("https://github-trending-api.now.sh/repositories?language={}&since={}", language_map.get(&picked_language).unwrap(), TIME_RANGES[time_range])
+    };
+
+    println!("url: {}", trend_url);
 
     Ok(())
 }

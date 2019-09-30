@@ -226,7 +226,7 @@ dependencies = [
 [[package]]
 name = "dialoguer"
 version = "0.4.0"
-source = "git+https://github.com/slaterb1/dialoguer.git#1792d296fe98770cc3b11d5882be55b0874a89c5"
+source = "git+https://github.com/slaterb1/dialoguer.git#12255373d6fd90c3e4b45a3ecf4a26273410111b"
 dependencies = [
  "console 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
