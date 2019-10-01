@@ -1,0 +1,19 @@
+version: # Defines the used `ops.yml` schema version
+  '1'
+ops:
+  - name: # Unique identifier for your op (required)
+      trending
+    description: # Short description for what your op does (required)
+      List open source projects that are trending on Github.
+    run: # Command that is executed when op is started ("npm start", "./start_script.sh", etc.) (required)
+      ./target/release/trending
+    mountCwd: # If set to `true`, binds the host's current working directory to `/cwd`; default value: `false` - working directory `/ops`
+      false
+    mountHome: # If set to `true`, binds the host's home directory to `/root`; default value: `false`
+      false
+    bind: # Bind additional volumes; trail the string accordingly to configure permissions for either read-only (:ro) or write (:w) access (example: ~/tmp:/root/tmp will bind lefthand directory in host to righthand directory in ops)
+      - '/tmp:/tmp'
+    port: # Map ports for your op container
+      - 3000:3000
+    help: # Configure the output for when your op is run with `op --help` or `op -h`
+      usage: 'List trending projects by using "github-trending-api" (https://github.com/huchenme/github-trending-api).'
