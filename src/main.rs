@@ -43,8 +43,8 @@ struct BuiltBy {
 const TIME_RANGES: [&str; 3] = ["daily", "weekly", "monthly"];
 
 // Emojis
-static STAR: Emoji<'_, '_> = Emoji("⭐ ", "s: ");
-static FORK: Emoji<'_, '_> = Emoji("🍴 ", "f: ");
+static STAR: Emoji<'_, '_> = Emoji("⭐ ", "stars: ");
+static FORK: Emoji<'_, '_> = Emoji("🍴 ", "forks: ");
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
