@@ -4,9 +4,17 @@ ops:
   - name: # Unique identifier for your op (required)
       trending
     description: # Short description for what your op does (required)
-      List open source projects that are trending on Github.
+      An Op to check trending open source projects on Github.
     run: # Command that is executed when op is started ("npm start", "./start_script.sh", etc.) (required)
-      ./target/release/trending
+      trending
+    env: # Provide required environment variables for your op; to access, use the platform specific API, e.g. `process.env` for NodeJS
+      - 'USER=world'
+      - 'OPS_ACCESS_TOKEN'
+    src: # Whitelist files and folders to be included in the published op's WORKDIR
+      - Dockerfile
+      - src
+      - Cargo.toml
+      - Cargo.lock
     mountCwd: # If set to `true`, binds the host's current working directory to `/cwd`; default value: `false` - working directory `/ops`
       false
     mountHome: # If set to `true`, binds the host's home directory to `/root`; default value: `false`
@@ -16,4 +24,10 @@ ops:
     port: # Map ports for your op container
       - 3000:3000
     help: # Configure the output for when your op is run with `op --help` or `op -h`
-      usage: 'List trending projects by using "github-trending-api" (https://github.com/huchenme/github-trending-api).'
+      usage: 'Your first hello-world op'
+      arguments:
+        username: 'Your username'
+        email: 'Your email'
+      options:
+        build: 'Build flag'
+        clear: 'Clears'

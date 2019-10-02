@@ -1,15 +1,20 @@
 ############################
 # Build container
 ############################
-FROM rust:1.37
-
-RUN apt-get update && \
-apt-get install musl-tools libssl-dev -y && \
-rustup target add x86_64-unknown-linux-musl
-
-COPY ./ /ops 
+FROM rust:1.38 AS dep
 
 WORKDIR /ops
 
-RUN RUSTFLAG=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl && \
-strip /ops/target/x86_64-unknown-linux-musl/release/rustydata
+COPY . .
+
+RUN cargo build --release
+
+############################
+# Final container
+############################
+FROM debian:10-slim
+
+WORKDIR /ops
+
+RUN apt-get update && apt-get -y install ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
+COPY --from=dep /ops/target/release/trending /bin
