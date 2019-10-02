@@ -21,9 +21,9 @@ struct Project {
     avatar: String,
     url: String,
     description: String,
-    language: String,
+    language: Option<String>,
     #[serde(rename(deserialize = "languageColor"))]
-    language_color: String,
+    language_color: Option<String>,
     stars: i32,
     forks: i32,
     #[serde(rename(deserialize = "currentPeriodStars"))]
@@ -109,17 +109,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let trend_selections: Vec<String> = trends.iter()
         .cloned()
         .map(|proj| {
-            let hex_str = proj.language_color.trim_start_matches("#");
-            let r = i64::from_str_radix(&hex_str[0..2], 16).unwrap() as u8;
-            let g = i64::from_str_radix(&hex_str[2..4], 16).unwrap() as u8;
-            let b = i64::from_str_radix(&hex_str[4..6], 16).unwrap() as u8;
-            format!(
-                "{} {}\n  {}\n  {} {} {} {}\n  {}\n",
-                Fixed(112).paint(proj.name), Black.on(RGB(r, b, g)).paint(proj.language),
-                Fixed(8).paint(proj.author),
-                STAR, proj.stars, FORK, proj.forks,
-                proj.description
-            )
+            match proj.language_color {
+                Some(col) => {
+                    let hex_str = col.trim_start_matches("#");
+                    let r = i64::from_str_radix(&hex_str[0..2], 16).unwrap() as u8;
+                    let g = i64::from_str_radix(&hex_str[2..4], 16).unwrap() as u8;
+                    let b = i64::from_str_radix(&hex_str[4..6], 16).unwrap() as u8;
+                    format!(
+                        "{} {}\n  {}\n  {} {} {} {}\n  {}\n",
+                        Fixed(112).paint(proj.name), Black.on(RGB(r, b, g)).paint(proj.language.unwrap()),
+                        Fixed(8).paint(proj.author),
+                        STAR, proj.stars, FORK, proj.forks,
+                        proj.description
+                    )
+                },
+                None => {
+                    format!(
+                        "{}\n  {}\n  {} {} {} {}\n  {}\n",
+                        Fixed(112).paint(proj.name),
+                        Fixed(8).paint(proj.author),
+                        STAR, proj.stars, FORK, proj.forks,
+                        proj.description
+                    )
+                }
+            }
         })
         .collect();
 
