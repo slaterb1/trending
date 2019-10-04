@@ -4,7 +4,7 @@ use serde_json;
 use dialoguer::{FuzzySelect, Select, theme::ColorfulTheme};
 use std::collections::HashMap;
 use console::Emoji;
-use ansi_term::Colour::{RGB, Black, Fixed};
+use ansi_term::Colour::{RGB, Black, Fixed, White};
 use std::i64;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -111,13 +111,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .map(|proj| {
             match proj.language_color {
                 Some(col) => {
+                    // extract r,g,b colour scheme, or default to grey with no background
                     let hex_str = col.trim_start_matches("#");
-                    let r = i64::from_str_radix(&hex_str[0..2], 16).unwrap() as u8;
-                    let g = i64::from_str_radix(&hex_str[2..4], 16).unwrap() as u8;
-                    let b = i64::from_str_radix(&hex_str[4..6], 16).unwrap() as u8;
+                    let lang = if hex_str.len() < 6 {
+                        Black.on(White).paint(proj.language.unwrap())
+                    } else {
+                        let r = i64::from_str_radix(&hex_str[0..2], 16).unwrap() as u8;
+                        let g = i64::from_str_radix(&hex_str[2..4], 16).unwrap() as u8;
+                        let b = i64::from_str_radix(&hex_str[4..6], 16).unwrap() as u8;
+                        Black.on(RGB(r, b, g)).paint(proj.language.unwrap())
+                    };
                     format!(
                         "{} {}\n  {}\n  {} {} {} {}\n  {}\n",
-                        Fixed(112).paint(proj.name), Black.on(RGB(r, b, g)).paint(proj.language.unwrap()),
+                        Fixed(112).paint(proj.name), lang,
                         Fixed(8).paint(proj.author),
                         STAR, proj.stars, FORK, proj.forks,
                         proj.description
@@ -141,7 +147,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .default(0)
         .paged(true)
         .lines_per_item(5)
-        .offset(1)
         .items(&trend_selections)
         .interact()?;
 
