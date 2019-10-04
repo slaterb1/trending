@@ -1,5 +1,5 @@
 version: # Defines the used `ops.yml` schema version
-  '1'
+  '1.1'
 ops:
   - name: # Unique identifier for your op (required)
       trending
@@ -24,10 +24,4 @@ ops:
     port: # Map ports for your op container
       - 3000:3000
     help: # Configure the output for when your op is run with `op --help` or `op -h`
-      usage: 'Your first hello-world op'
-      arguments:
-        username: 'Your username'
-        email: 'Your email'
-      options:
-        build: 'Build flag'
-        clear: 'Clears'
+      usage: 'Select language and trending period via prompts to get current open source projects.'
