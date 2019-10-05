@@ -1,5 +1,5 @@
 version: # Defines the used `ops.yml` schema version
-  '1.1'
+  '1.1.1'
 ops:
   - name: # Unique identifier for your op (required)
       trending
