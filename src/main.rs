@@ -147,7 +147,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .default(0)
         .paged(true)
         .lines_per_item(5)
-        .items(&trend_selections)
+        .items(&trend_selections[..])
         .interact()?;
 
     println!("{} {}", trends[selected_project].name, trends[selected_project].url);
