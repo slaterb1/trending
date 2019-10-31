@@ -5,6 +5,9 @@ ops:
       trending
     description: # Short description for what your op does (required)
       An Op to check trending open source projects on Github.
+    public:
+      true
+    sourceCodeURL: "https://github.com/slaterb1/trending"
     run: # Command that is executed when op is started ("npm start", "./start_script.sh", etc.) (required)
       trending
     env: # Provide required environment variables for your op; to access, use the platform specific API, e.g. `process.env` for NodeJS
@@ -25,3 +28,6 @@ ops:
       - 3000:3000
     help: # Configure the output for when your op is run with `op --help` or `op -h`
       usage: 'Select language and trending period via prompts to get current open source projects.'
+      arguments:
+        language: 'language to filter by'
+        span: 'time span to cover'
