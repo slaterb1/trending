@@ -1,8 +1,8 @@
 version: # Defines the used `ops.yml` schema version
-  '1.1.1'
+  '1'
 ops:
   - name: # Unique identifier for your op (required)
-      trending
+      trending:1.1.2
     description: # Short description for what your op does (required)
       An Op to check trending open source projects on Github.
     public:
@@ -10,9 +10,6 @@ ops:
     sourceCodeURL: "https://github.com/slaterb1/trending"
     run: # Command that is executed when op is started ("npm start", "./start_script.sh", etc.) (required)
       trending
-    env: # Provide required environment variables for your op; to access, use the platform specific API, e.g. `process.env` for NodeJS
-      - 'USER=world'
-      - 'OPS_ACCESS_TOKEN'
     src: # Whitelist files and folders to be included in the published op's WORKDIR
       - Dockerfile
       - src
